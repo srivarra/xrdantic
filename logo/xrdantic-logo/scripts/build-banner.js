@@ -3,7 +3,7 @@ import chalk from "chalk";
 import ora from "ora";
 import { fileURLToPath } from "url";
 import { dirname, join } from "path";
-import { existsSync, mkdirSync } from "fs";
+import { existsSync, mkdirSync, writeFileSync } from "fs";
 import chokidar from "chokidar";
 
 import { SvgLoader } from "./lib/svg-loader.js";
@@ -22,11 +22,20 @@ program
     .version("1.0.0")
     .option("-r, --revision <version>", "Revision/version number", "0.0.1")
     .option("-t, --template <name>", "Template name to use", "xrdantic")
-    .option("-o, --output <path>", "Output file path", "dist/banner.png")
+    .option(
+        "-o, --output <path>",
+        "Output file path (extension determines PNG or SVG if format is not specified)",
+        "dist/banner.png",
+    )
     .option("-w, --width <number>", "Output width in pixels", "1280")
     .option("-h, --height <number>", "Output height in pixels", "640")
     .option("--watch", "Watch for file changes and rebuild")
     .option("--quality <number>", "PNG quality (1-9)", "9")
+    .option(
+        "--output-format <format>",
+        "Output format (svg, png, both)",
+        "both",
+    )
     .option("--verbose", "Verbose logging")
     .option("--dry-run", "Show what would be done without executing");
 
@@ -52,10 +61,11 @@ async function buildBanner() {
         const buildConfig = {
             ...config,
             revision: options.revision,
-            output: options.output,
+            output: options.output, // Base output path, extension might be ignored depending on format
             width: Number.parseInt(options.width),
             height: Number.parseInt(options.height),
             quality: Number.parseInt(options.quality),
+            outputFormat: options.outputFormat.toLowerCase(),
         };
 
         logger.info("Build configuration:", buildConfig);
@@ -66,7 +76,13 @@ async function buildBanner() {
         }
 
         // Ensure output directory exists
-        const outputDir = dirname(buildConfig.output);
+        const baseOutputName = buildConfig.output.includes(".")
+            ? buildConfig.output.substring(
+                  0,
+                  buildConfig.output.lastIndexOf("."),
+              )
+            : buildConfig.output;
+        const outputDir = dirname(baseOutputName);
         if (!existsSync(outputDir)) {
             mkdirSync(outputDir, { recursive: true });
         }
@@ -82,23 +98,64 @@ async function buildBanner() {
             buildConfig,
         );
 
-        // Step 3: Convert to PNG
-        spinner.text = "Converting to PNG...";
-        const pngBuffer = await pngConverter.convert(renderedSvg, buildConfig);
+        let svgOutputPath = null;
+        let pngOutputPath = null;
+        let pngStats = null;
 
-        // Step 4: Save output
-        spinner.text = "Saving output...";
-        await pngConverter.save(pngBuffer, buildConfig.output);
+        if (
+            buildConfig.outputFormat === "svg" ||
+            buildConfig.outputFormat === "both"
+        ) {
+            spinner.text = "Saving SVG output...";
+            svgOutputPath = `${baseOutputName}.svg`;
+            try {
+                writeFileSync(svgOutputPath, renderedSvg, "utf8");
+                logger.info(`SVG saved to: ${svgOutputPath}`);
+            } catch (error) {
+                spinner.warn(chalk.yellow("SVG saving failed."));
+                logger.warn("Could not save SVG file:", error.message);
+            }
+        }
 
-        const stats = await pngConverter.getStats(buildConfig.output);
+        if (
+            buildConfig.outputFormat === "png" ||
+            buildConfig.outputFormat === "both"
+        ) {
+            // Step 3: Convert to PNG
+            spinner.text = "Converting to PNG...";
+            const pngBuffer = await pngConverter.convert(
+                renderedSvg,
+                buildConfig,
+            );
 
-        spinner.succeed(chalk.green("Banner generated successfully!"));
+            // Step 4: Save output
+            spinner.text = "Saving PNG output...";
+            pngOutputPath = `${baseOutputName}.png`;
+            await pngConverter.save(pngBuffer, pngOutputPath);
+            pngStats = await pngConverter.getStats(pngOutputPath);
+        }
 
-        logger.success("Output details:");
-        logger.info(`  File: ${buildConfig.output}`);
-        logger.info(`  Size: ${stats.width}x${stats.height}px`);
-        logger.info(`  File size: ${(stats.size / 1024).toFixed(2)} KB`);
-        logger.info(`  Revision: ${buildConfig.revision}`);
+        if (svgOutputPath || pngOutputPath) {
+            spinner.succeed(chalk.green("Banner generated successfully!"));
+            logger.success("Output details:");
+            if (pngOutputPath && pngStats) {
+                logger.info(`  PNG File: ${pngOutputPath}`);
+                logger.info(`  Size: ${pngStats.width}x${pngStats.height}px`);
+                logger.info(
+                    `  File size (PNG): ${(pngStats.size / 1024).toFixed(2)} KB`,
+                );
+            }
+            if (svgOutputPath) {
+                logger.info(`  SVG File: ${svgOutputPath}`);
+            }
+            logger.info(`  Revision: ${buildConfig.revision}`);
+        } else {
+            spinner.warn(
+                chalk.yellow(
+                    "No output generated based on the format specified.",
+                ),
+            );
+        }
     } catch (error) {
         spinner.fail(chalk.red("Build failed"));
         logger.error("Error:", error.message);
@@ -113,9 +170,9 @@ async function watchMode() {
     logger.info("Starting watch mode...");
 
     const watchPaths = [
-        join(__dirname, "templates/**/*.js"),
+        join(__dirname, "templates/**/*.jsx"), // Assuming templates are .jsx
         join(__dirname, "templates/**/*.json"),
-        join(__dirname, "components/**/*.js"),
+        join(__dirname, "components/**/*.jsx"), // Assuming components are .jsx
     ];
 
     const watcher = chokidar.watch(watchPaths, {
@@ -125,12 +182,12 @@ async function watchMode() {
 
     watcher.on("change", async (path) => {
         logger.info(`File changed: ${path}`);
-        await buildBanner();
+        await buildBanner(); // Rebuild with current options
     });
 
     watcher.on("ready", () => {
         logger.success("Watching for changes...");
-        buildBanner();
+        buildBanner(); // Initial build with current options
     });
 
     // Handle graceful shutdown

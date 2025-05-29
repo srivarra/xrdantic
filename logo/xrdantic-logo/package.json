@@ -4,11 +4,13 @@
     "description": "Modular SVG to PNG converter with React rendering and revision control",
     "type": "module",
     "scripts": {
-        "build:banner": "tsx scripts/build-banner.js",
-        "build:banner:dev": "tsx scripts/build-banner.js --revision=dev --output=dist/xrdantic-banner-dev.png",
-        "build:banner:release": "tsx scripts/build-banner.js --revision=$npm_package_version --output=dist/xrdantic-banner-release.png",
-        "build:banner:custom": "tsx scripts/build-banner.js --revision=custom --template=custom --output=dist/custom-banner.png",
-        "dev": "tsx scripts/build-banner.js --watch --revision=dev",
+        "build:banner": "tsx scripts/build-banner.js --output-format both",
+        "build:banner:dev": "tsx scripts/build-banner.js --revision=dev --output=dist/xrdantic-banner-dev.png --output-format both",
+        "build:banner:release": "tsx scripts/build-banner.js --revision=$npm_package_version --output=dist/xrdantic-banner-release.png --output-format both",
+        "build:banner:custom": "tsx scripts/build-banner.js --revision=custom --template=custom --output=dist/custom-banner.png --output-format both",
+        "build-svg": "tsx scripts/build-banner.js --output-format svg",
+        "build-png": "tsx scripts/build-banner.js --output-format png",
+        "dev": "tsx scripts/build-banner.js --watch --revision=dev --output-format both",
         "clean": "rimraf dist"
     },
     "dependencies": {

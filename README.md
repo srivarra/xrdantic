@@ -1,3 +1,5 @@
+![xrdantic logo](./logo/xrdantic-logo/dist/banner.svg)
+
 # xrdantic
 
 [![Tests][badge-tests]][tests]
