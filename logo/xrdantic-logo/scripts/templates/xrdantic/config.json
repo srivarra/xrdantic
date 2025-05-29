@@ -1,0 +1,15 @@
+{
+    "name": "Xrdantic Banner",
+    "description": "Blueprint-style banner for Xrdantic project",
+    "defaultWidth": 1280,
+    "defaultHeight": 640,
+    "backgroundColor": "transparent",
+    "githubUrl": "srivarra/xrdantic",
+    "title": "XRDANTIC",
+    "subtitle": "Pydantic Scaffolding for Xarray",
+    "colors": {
+        "primary": "#4A90E2",
+        "secondary": "#2C5282",
+        "accent": "#6BE8E8"
+    }
+}

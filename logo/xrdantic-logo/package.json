@@ -1,0 +1,30 @@
+{
+    "name": "xrdantic-banner-generator",
+    "version": "0.0.1",
+    "description": "Modular SVG to PNG converter with React rendering and revision control",
+    "type": "module",
+    "scripts": {
+        "build:banner": "tsx scripts/build-banner.js",
+        "build:banner:dev": "tsx scripts/build-banner.js --revision=dev --output=dist/xrdantic-banner-dev.png",
+        "build:banner:release": "tsx scripts/build-banner.js --revision=$npm_package_version --output=dist/xrdantic-banner-release.png",
+        "build:banner:custom": "tsx scripts/build-banner.js --revision=custom --template=custom --output=dist/custom-banner.png",
+        "dev": "tsx scripts/build-banner.js --watch --revision=dev",
+        "clean": "rimraf dist"
+    },
+    "dependencies": {
+        "react": "^19.1.0",
+        "react-dom": "^19.1.0"
+    },
+    "devDependencies": {
+        "@babel/core": "^7.27.3",
+        "@babel/preset-react": "^7.27.1",
+        "chalk": "^5.4.1",
+        "chokidar": "^4.0.3",
+        "commander": "^14.0.0",
+        "ora": "^8.2.0",
+        "puppeteer": "^24.9.0",
+        "rimraf": "^6.0.1",
+        "sharp": "^0.34.2",
+        "tsx": "^4.19.4"
+    }
+}

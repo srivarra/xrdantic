@@ -1,0 +1,337 @@
+import React from "react";
+
+export const CoordinatesIcon = ({ colors, transform }) => (
+    <g transform={transform}>
+        <line
+            x1="-60"
+            y1="0"
+            x2="60"
+            y2="0"
+            stroke={colors.cyan}
+            strokeWidth="4"
+            strokeDasharray="12,6"
+        />
+        <circle cx="-60" cy="0" r="6" fill={colors.cyan} />
+        <circle
+            cx="-30"
+            cy="0"
+            r="4"
+            fill="none"
+            stroke={colors.cyan}
+            strokeWidth="2"
+        />
+        <circle
+            cx="0"
+            cy="0"
+            r="4"
+            fill="none"
+            stroke={colors.cyan}
+            strokeWidth="2"
+        />
+        <circle
+            cx="30"
+            cy="0"
+            r="4"
+            fill="none"
+            stroke={colors.cyan}
+            strokeWidth="2"
+        />
+        <circle cx="60" cy="0" r="6" fill={colors.cyan} />
+        <text
+            x="0"
+            y="35"
+            fontFamily="'Geist Mono', 'Courier New', monospace"
+            fontSize="16"
+            fill={colors.primary}
+            textAnchor="middle"
+        >
+            Coordinates
+        </text>
+    </g>
+);
+
+export const DataArrayIcon = ({ colors, transform }) => (
+    <g transform={transform}>
+        {[...Array(6)].map((_, i) => {
+            const x = (i % 3) * 33 - 45;
+            const y = Math.floor(i / 3) * 30 - 12;
+            return (
+                <rect
+                    key={i}
+                    x={x}
+                    y={y}
+                    width="24"
+                    height="24"
+                    fill="url(#hatch-medium-blue)"
+                    stroke={colors.mediumBlue}
+                    strokeWidth="2"
+                    strokeDasharray="6,3"
+                    rx="3"
+                />
+            );
+        })}
+        <text
+            x="0"
+            y="65"
+            fontFamily="'Geist Mono', 'Courier New', monospace"
+            fontSize="16"
+            fill={colors.primary}
+            textAnchor="middle"
+        >
+            DataArrays
+        </text>
+    </g>
+);
+
+export const DatasetIcon = ({ colors, transform }) => (
+    <g transform={transform}>
+        {/* Back layer cubes */}
+        <rect
+            x="-24"
+            y="-12"
+            width="20"
+            height="20"
+            fill="url(#hatch-light-blue)"
+            stroke={colors.lightBlue}
+            strokeWidth="2"
+            strokeDasharray="6,3"
+            rx="3"
+            opacity="0.7"
+        />
+        <rect
+            x="4"
+            y="-12"
+            width="20"
+            height="20"
+            fill="url(#hatch-light-blue)"
+            stroke={colors.lightBlue}
+            strokeWidth="2"
+            strokeDasharray="6,3"
+            rx="3"
+            opacity="0.7"
+        />
+        <rect
+            x="-24"
+            y="16"
+            width="20"
+            height="20"
+            fill="url(#hatch-light-blue)"
+            stroke={colors.lightBlue}
+            strokeWidth="2"
+            strokeDasharray="6,3"
+            rx="3"
+            opacity="0.7"
+        />
+        <rect
+            x="4"
+            y="16"
+            width="20"
+            height="20"
+            fill="url(#hatch-light-blue)"
+            stroke={colors.lightBlue}
+            strokeWidth="2"
+            strokeDasharray="6,3"
+            rx="3"
+            opacity="0.7"
+        />
+        {/* Front layer cubes */}
+        <rect
+            x="-36"
+            y="0"
+            width="20"
+            height="20"
+            fill="url(#hatch-dark-blue)"
+            stroke={colors.darkBlue}
+            strokeWidth="2"
+            strokeDasharray="6,3"
+            rx="3"
+        />
+        <rect
+            x="-8"
+            y="0"
+            width="20"
+            height="20"
+            fill="url(#hatch-dark-blue)"
+            stroke={colors.darkBlue}
+            strokeWidth="2"
+            strokeDasharray="6,3"
+            rx="3"
+        />
+        <rect
+            x="-36"
+            y="28"
+            width="20"
+            height="20"
+            fill="url(#hatch-dark-blue)"
+            stroke={colors.darkBlue}
+            strokeWidth="2"
+            strokeDasharray="6,3"
+            rx="3"
+        />
+        <rect
+            x="-8"
+            y="28"
+            width="20"
+            height="20"
+            fill="url(#hatch-dark-blue)"
+            stroke={colors.darkBlue}
+            strokeWidth="2"
+            strokeDasharray="6,3"
+            rx="3"
+        />
+        {/* 3D connection lines */}
+        <line
+            x1="-16"
+            y1="0"
+            x2="-4"
+            y2="-12"
+            stroke={colors.primary}
+            strokeWidth="1.5"
+            opacity="0.6"
+        />
+        <line
+            x1="12"
+            y1="0"
+            x2="24"
+            y2="-12"
+            stroke={colors.primary}
+            strokeWidth="1.5"
+            opacity="0.6"
+        />
+        <line
+            x1="-16"
+            y1="28"
+            x2="-4"
+            y2="16"
+            stroke={colors.primary}
+            strokeWidth="1.5"
+            opacity="0.6"
+        />
+        <line
+            x1="12"
+            y1="28"
+            x2="24"
+            y2="16"
+            stroke={colors.primary}
+            strokeWidth="1.5"
+            opacity="0.6"
+        />
+        <text
+            x="0"
+            y="75"
+            fontFamily="'Geist Mono', 'Courier New', monospace"
+            fontSize="16"
+            fill={colors.primary}
+            textAnchor="middle"
+        >
+            Datasets
+        </text>
+    </g>
+);
+
+export const DataTreeIcon = ({ colors, transform }) => (
+    <g transform={transform}>
+        {/* Root node */}
+        <rect
+            x="-16"
+            y="-8"
+            width="32"
+            height="16"
+            fill="url(#hatch-orange)"
+            stroke={colors.orange}
+            strokeWidth="2"
+            strokeDasharray="6,3"
+            rx="3"
+        />
+        {/* Branch lines */}
+        <line
+            x1="0"
+            y1="8"
+            x2="0"
+            y2="24"
+            stroke={colors.green}
+            strokeWidth="3"
+            strokeDasharray="8,4"
+        />
+        <line
+            x1="-32"
+            y1="24"
+            x2="32"
+            y2="24"
+            stroke={colors.green}
+            strokeWidth="3"
+            strokeDasharray="8,4"
+        />
+        <line
+            x1="-32"
+            y1="24"
+            x2="-32"
+            y2="40"
+            stroke={colors.green}
+            strokeWidth="3"
+            strokeDasharray="8,4"
+        />
+        <line
+            x1="0"
+            y1="24"
+            x2="0"
+            y2="40"
+            stroke={colors.green}
+            strokeWidth="3"
+            strokeDasharray="8,4"
+        />
+        <line
+            x1="32"
+            y1="24"
+            x2="32"
+            y2="40"
+            stroke={colors.green}
+            strokeWidth="3"
+            strokeDasharray="8,4"
+        />
+        {/* Child nodes */}
+        <rect
+            x="-44"
+            y="40"
+            width="24"
+            height="16"
+            fill="url(#hatch-green)"
+            stroke={colors.green}
+            strokeWidth="2"
+            strokeDasharray="6,3"
+            rx="3"
+        />
+        <rect
+            x="-12"
+            y="40"
+            width="24"
+            height="16"
+            fill="url(#hatch-green)"
+            stroke={colors.green}
+            strokeWidth="2"
+            strokeDasharray="6,3"
+            rx="3"
+        />
+        <rect
+            x="20"
+            y="40"
+            width="24"
+            height="16"
+            fill="url(#hatch-green)"
+            stroke={colors.green}
+            strokeWidth="2"
+            strokeDasharray="6,3"
+            rx="3"
+        />
+        <text
+            x="0"
+            y="85"
+            fontFamily="'Geist Mono', 'Courier New', monospace"
+            fontSize="16"
+            fill={colors.primary}
+            textAnchor="middle"
+        >
+            DataTrees
+        </text>
+    </g>
+);
