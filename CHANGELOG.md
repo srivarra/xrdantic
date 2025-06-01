@@ -8,11 +8,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [Unreleased]
 
 ### <!-- 5 --> 🌀 Miscellaneous
+- Update changelog by @github-actions[bot]
 - 📝 Trying svg for README banner by @srivarra
 - Update changelog by @github-actions[bot]
 - 🎉 Begin by @srivarra
 - Initialize project from cookiecutter-scverse by @srivarra
 
 ## New Contributors
-* @srivarra made their first contribution
 * @github-actions[bot] made their first contribution
+* @srivarra made their first contribution
