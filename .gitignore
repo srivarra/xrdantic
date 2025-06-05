@@ -15,6 +15,7 @@ __pycache__/
 
 # Tests and coverage
 /data/
+.hypothesis/
 
 # docs
 /docs/generated/
@@ -34,6 +35,8 @@ logo/xrdantic-logo/node_modules/
 
 # testing
 /coverage
+.coverage
+.coverage.*
 
 # next.js
 /.next/
@@ -61,3 +64,6 @@ yarn-error.log*
 # typescript
 *.tsbuildinfo
 next-env.d.ts
+
+# AI tools
+.cursor/

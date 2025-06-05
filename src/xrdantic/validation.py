@@ -322,8 +322,7 @@ class ModelValidator:
         """
         collector = ValidationCollector(continue_on_error=True)
 
-        # Get all field types by calling utils directly
-        model_fields = model_instance.model_fields
+        model_fields = type(model_instance).model_fields
         data_fields = utils.get_data_fields(model_fields)
         coord_fields = utils.get_coord_fields(model_fields)
         coord_model_fields = utils.get_coordinate_model_fields(model_fields)

@@ -27,6 +27,8 @@ dependencies = [
   "more-itertools>=10.7",
   "natsort>=8.4",
   "numpydantic>=1.6.9",
+  "pydantic>=2.11.5",
+  "pydantic-settings>=2.9.1",
   "session-info2",
   "xarray",
 ]
@@ -34,12 +36,15 @@ optional-dependencies.dev = [
   "pre-commit",
 ]
 optional-dependencies.doc = [
+  "autodoc-pydantic>=2.2",
   "docutils>=0.8,!=0.18.*,!=0.19.*",
   "ipykernel",
   "ipython",
+  "matplotlib>=3.10.3",
   "myst-nb>=1.1",
   "pandas",
   # Until pybtex >0.24.0 releases: https://bitbucket.org/pybtex-devs/pybtex/issues/169/
+  "scanpydoc>=0.15.4",
   "setuptools",
   "sphinx>=8.1",
   "sphinx-autodoc-typehints",
@@ -54,7 +59,9 @@ optional-dependencies.nb = [
 ]
 optional-dependencies.test = [
   "coverage",
+  "hypothesis>=6.133",
   "pytest",
+  "pytest-cov>=6.1.1",
 ]
 # https://docs.pypi.org/project_metadata/#project-urls
 urls.Documentation = "https://xrdantic.readthedocs.io/"

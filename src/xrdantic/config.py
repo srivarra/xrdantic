@@ -10,14 +10,16 @@ from __future__ import annotations
 from functools import lru_cache
 from typing import Any
 
-from pydantic import BaseModel, Field, ValidationError
+from pydantic import Field, ValidationError
+from pydantic_settings import BaseSettings, SettingsConfigDict
 
 
-class XrdanticSettings(BaseModel):
+class XrdanticSettings(BaseSettings):
     """
     Global settings for xrdantic behavior.
 
     Centralized configuration for validation and performance settings.
+    Settings can be overridden by environment variables (e.g., XRDANTIC_STRICT_VALIDATION=true).
     """
 
     # Validation settings
@@ -50,11 +52,12 @@ class XrdanticSettings(BaseModel):
     # Development settings
     debug_mode: bool = Field(default=False, description="Enable debug mode with additional logging")
 
-    model_config = {
-        "validate_assignment": True,
-        "extra": "ignore",
-        "frozen": False,
-    }
+    model_config = SettingsConfigDict(
+        env_prefix="XRDANTIC_",
+        validate_assignment=True,
+        extra="ignore",
+        frozen=False,
+    )
 
 
 @lru_cache
@@ -67,8 +70,7 @@ def get_settings() -> XrdanticSettings:
 
     Returns
     -------
-    XrdanticSettings
-        The global settings instance
+    The global settings instance
     """
     return XrdanticSettings()
 
@@ -80,36 +82,37 @@ def update_settings(**kwargs: Any) -> None:
     Parameters
     ----------
     **kwargs
-        Settings to update
+        Settings to update. Only valid XrdanticSettings fields will be considered.
 
     Raises
     ------
     ValidationError
         If the updated settings are invalid.
+    ValueError
+        If an invalid setting key is provided.
     """
-    current_settings = get_settings()
-    new_settings_data = current_settings.model_dump()
+    current_settings_obj = get_settings()
+    new_settings_data = current_settings_obj.model_dump()
 
-    # Update with new values, only considering valid fields
+    valid_keys = XrdanticSettings.model_fields.keys()
     for key, value in kwargs.items():
-        if key in XrdanticSettings.model_fields:
+        if key in valid_keys:
             new_settings_data[key] = value
         else:
-            raise ValueError(f"Invalid setting: {key}")
+            raise ValueError(f"Invalid setting: '{key}'. Valid settings are: {', '.join(valid_keys)}")
 
     try:
-        XrdanticSettings(**new_settings_data)
+        validated_settings_data = XrdanticSettings(**new_settings_data).model_dump()
     except ValidationError:
         raise
 
     get_settings.cache_clear()
 
-    settings_to_update = get_settings()
+    global_settings_instance_to_update = get_settings()
 
-    # Apply the validated new settings
-    for key, value in new_settings_data.items():
-        if hasattr(settings_to_update, key):  # Redundant check, but safe
-            setattr(settings_to_update, key, value)
+    # Apply the validated new values to this global instance.
+    for key, value in validated_settings_data.items():
+        setattr(global_settings_instance_to_update, key, value)
 
 
 class ValidationContext:
@@ -121,22 +124,24 @@ class ValidationContext:
 
     def __init__(self, **temporary_settings: Any):
         self.temporary_settings = temporary_settings
-        self.original_settings: dict[str, Any] = {}
+        self.original_settings_values: dict[str, Any] = {}
+
+        valid_keys = XrdanticSettings.model_fields.keys()
+        for key in self.temporary_settings:
+            if key not in valid_keys:
+                raise ValueError(f"Invalid temporary setting: '{key}'. Valid settings are: {', '.join(valid_keys)}")
 
     def __enter__(self) -> ValidationContext:
-        settings = get_settings()
-        # Store original settings
-        for key in self.temporary_settings:
-            if hasattr(settings, key):
-                self.original_settings[key] = getattr(settings, key)
-                setattr(settings, key, self.temporary_settings[key])
+        current_settings_obj = get_settings()
+        for key, temp_value in self.temporary_settings.items():
+            self.original_settings_values[key] = getattr(current_settings_obj, key)
+            setattr(current_settings_obj, key, temp_value)
         return self
 
-    def __exit__(self, exc_type, exc_val, exc_tb) -> None:
-        settings = get_settings()
-        # Restore original settings
-        for key, value in self.original_settings.items():
-            setattr(settings, key, value)
+    def __exit__(self, exc_type: Any, exc_val: Any, exc_tb: Any) -> None:
+        current_settings_obj = get_settings()
+        for key, original_value in self.original_settings_values.items():
+            setattr(current_settings_obj, key, original_value)
 
 
 # Convenience functions for common configuration patterns
@@ -161,3 +166,9 @@ def enable_debug_mode() -> None:
         log_validation_errors=True,
         detailed_error_messages=True,
     )
+
+
+def reset_to_default_settings() -> None:
+    """Resets all xrdantic settings to their default values or environment-defined values."""
+    get_settings.cache_clear()
+    get_settings()

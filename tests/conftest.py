@@ -10,69 +10,70 @@ from __future__ import annotations
 import numpy as np
 import numpydantic.dtype as dtypes
 import pytest
+from numpydantic import NDArray
 
 from xrdantic.models import Coordinate, DataArray, Dataset
 from xrdantic.types import Dim
 from xrdantic.utils import Attr, Data, Name
 
-from .test_utils import DataGenerator, ModelTester
+from .utils import DataGenerator, ModelTester
 
 
 # Pytest fixtures for common test data
 @pytest.fixture
-def simple_1d_array():
+def simple_1d_array() -> NDArray:
     """Fixture providing a simple 1D array."""
     return np.arange(10, dtype=np.float64)
 
 
 @pytest.fixture
-def simple_2d_array():
+def simple_2d_array() -> NDArray:
     """Fixture providing a simple 2D array."""
     return DataGenerator.random_array((5, 10))
 
 
 @pytest.fixture
-def array_with_nans():
+def array_with_nans() -> NDArray:
     """Fixture providing an array with NaN values."""
     return DataGenerator.array_with_nans((10,))
 
 
 @pytest.fixture
-def array_with_infs():
+def array_with_infs() -> NDArray:
     """Fixture providing an array with infinite values."""
     return DataGenerator.array_with_infs((10,))
 
 
 @pytest.fixture
-def test_coordinate_class():
+def test_coordinate_class() -> type[Coordinate]:
     """Fixture providing a test coordinate class."""
     return ModelTester.create_test_coordinate()
 
 
 @pytest.fixture
-def test_dataarray_class():
+def test_dataarray_class() -> type[DataArray]:
     """Fixture providing a test DataArray class."""
     return ModelTester.create_test_dataarray()
 
 
 @pytest.fixture
-def test_dataset_class():
+def test_dataset_class() -> type[Dataset]:
     """Fixture providing a test Dataset class."""
     return ModelTester.create_test_dataset()
 
 
 # Parametrized test helpers
-def parametrize_array_dtypes():
+def parametrize_array_dtypes() -> pytest.MarkDecorator:
     """Parametrize test with common array dtypes."""
     return pytest.mark.parametrize("dtype", [np.int32, np.int64, np.float32, np.float64])
 
 
-def parametrize_array_shapes():
+def parametrize_array_shapes() -> pytest.MarkDecorator:
     """Parametrize test with common array shapes."""
     return pytest.mark.parametrize("shape", [(10,), (5, 10), (2, 3, 4), (10, 10, 10)])
 
 
-def parametrize_invalid_shapes():
+def parametrize_invalid_shapes() -> pytest.MarkDecorator:
     """Parametrize test with invalid array shapes."""
     return pytest.mark.parametrize("shape", [(), (0,), (-1, 5), (5, -1), (0, 0)])
 
@@ -153,9 +154,6 @@ class WeatherData(Dataset):
     source: Attr[str] = "weather_station"
 
 
-# ===== Fixtures =====
-
-
 @pytest.fixture
 def sample_dims() -> dict[str, Dim]:
     """Sample dimension objects for testing."""
@@ -175,12 +173,12 @@ def sample_dataarray_classes() -> dict[str, type[DataArray]]:
 
 
 @pytest.fixture
-def sample_dataarray_class():
+def sample_dataarray_class() -> type[DataArray]:
     """Sample DataArray class for testing."""
     return Image2D
 
 
 @pytest.fixture
-def sample_dataset_class():
+def sample_dataset_class() -> type[WeatherData]:
     """Sample Dataset class for testing."""
     return WeatherData

@@ -1,13 +1,16 @@
 from __future__ import annotations
 
 from enum import Enum
-from typing import Annotated, Any, Literal, TypeVar
+from typing import TYPE_CHECKING, Annotated, Any, Literal, TypeVar
 
 from numpydantic import Shape
 from pydantic import Field
 from pydantic.fields import FieldInfo
 
 from xrdantic.types import Dim, TDims, TDType, TNDArray
+
+if TYPE_CHECKING:
+    pass
 
 T = TypeVar("T")
 
@@ -241,14 +244,12 @@ class Data:
             raise TypeError(f"{cls.__name__}[...] requires two arguments: Dims and DType.")
 
         dims_arg, dtype_arg = params
-
-        # Get metadata, including processed dims, from xr_meta (which now includes validation)
         metadata = xr_meta(kind=XrAnnotation.DATA, dims=dims_arg, dtype=dtype_arg)
-
         processed_dims = metadata.get("dims")
 
         if processed_dims:
             shape_string = _dims_to_shape_string(processed_dims)
+
             return Annotated[TNDArray[Shape[shape_string], dtype_arg], Field(json_schema_extra=metadata)]  # type: ignore
         else:
             from xrdantic.errors import no_dimensions_error
@@ -266,8 +267,7 @@ class Attr:
 
     @classmethod
     def __class_getitem__(cls, attr_type: type[T]) -> Any:
-        metadata = xr_meta(kind=XrAnnotation.ATTR)
-        return Annotated[attr_type | Literal[None], Field(json_schema_extra=metadata)]  # type: ignore
+        return Annotated[attr_type | Literal[None], Field(json_schema_extra=xr_meta(kind=XrAnnotation.ATTR))]
 
 
 Name = Annotated[str | Literal[None], Field(json_schema_extra=xr_meta(kind=XrAnnotation.NAME))]
