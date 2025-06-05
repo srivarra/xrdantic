@@ -61,6 +61,9 @@ jobs:
     name: ${{ matrix.env.label }}
     runs-on: ${{ matrix.os }}
 
+    environment:
+      name: codecov
+
     steps:
       - uses: actions/checkout@v4
         with:
@@ -83,6 +86,8 @@ jobs:
         run: uvx hatch run ${{ matrix.env.name }}:coverage xml
       - name: Upload coverage
         uses: codecov/codecov-action@v5
+        env:
+          CODECOV_TOKEN: ${{ secrets.CODECOV_TOKEN }}
         with:
           use_oidc: true
 
