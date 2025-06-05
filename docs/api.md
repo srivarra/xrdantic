@@ -1,39 +1,44 @@
 # API
 
-## Preprocessing
-
 ```{eval-rst}
-.. module:: xrdantic.pp
+.. module:: xrdantic
 .. currentmodule:: xrdantic
-
-.. autosummary::
-    :toctree: generated
-
-    pp.basic_preproc
-    pp.elaborate_example
 ```
 
-## Tools
+## Core Model Classes
 
 ```{eval-rst}
-.. module:: xrdantic.tl
-.. currentmodule:: xrdantic
-
 .. autosummary::
     :toctree: generated
 
-    tl.basic_tool
+    Coordinate
+    DataArray
+    Dataset
+    DataTree
 ```
 
-## Plotting
+## Type Annotation Helpers
 
 ```{eval-rst}
-.. module:: xrdantic.pl
-.. currentmodule:: xrdantic
-
 .. autosummary::
     :toctree: generated
 
-    pl.basic_plot
-    pl.BasicClass
+    Attr
+    Data
+    Dim
+    Name
+```
+
+## Configuration and Settings
+
+```{eval-rst}
+.. autosummary::
+    :toctree: generated
+
+    XrdanticSettings
+    ValidationContext
+    enable_debug_mode
+    enable_performance_mode
+    enable_strict_mode
+    get_settings
 ```

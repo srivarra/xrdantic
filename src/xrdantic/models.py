@@ -18,6 +18,15 @@ from xrdantic.utils import (
     get_name_field,
 )
 
+# Explicitly control what gets exported for documentation
+__all__ = [
+    "XrBase",
+    "Coordinate",
+    "DataArray",
+    "Dataset",
+    "DataTree",
+]
+
 
 class XrBase(BaseModel):
     """
@@ -166,13 +175,17 @@ class Coordinate(XrBase):
 
     Examples
     --------
-        >>> class TimeCoord(Coordinate):
-        ...     data: Data[Time, int]
-        ...     name: Name
-        ...     units: Attr[str] = "days"
+        >>> from xrdantic import Coordinate, Data, Name, Attr, Dim
+        >>> import numpy as np
 
-        >>> time_coord = TimeCoord(data=np.arange(10), name="time")
-        >>> dim_name, coord_array = time_coord.to_xarray_coord()
+        >>> X = Dim("x")
+        >>> class XCoord(Coordinate):
+        ...     data: Data[X, int]
+        ...     name: Name
+        ...     units: Attr[str] = "length"
+
+        >>> x_coord = XCoord(data=np.arange(10), name="x")
+        >>> dim_name, coord_array = x_coord.to_xarray_coord()
 
     Raises
     ------
@@ -262,6 +275,12 @@ class DataArray(XrBase):
 
     Examples
     --------
+        >>> from xrdantic import DataArray, Data, Attr, Dim
+        >>> import numpy as np
+
+        >>> Time = Dim("time")
+        >>> Y = Dim("y")
+        >>> X = Dim("x")
         >>> class Temperature(DataArray):
         ...     data: Data[(Time, Y, X), float]
         ...     time: TimeCoord
@@ -328,19 +347,22 @@ class DataArray(XrBase):
 
     @classmethod
     def new(cls, **field_values: Any) -> xr.DataArray:
-        """
+        r"""
         Create a new DataArray instance with the given field values.
 
-        Args:
-            **field_values: Field values including data and coordinates
+        Parameters
+        ----------
+        **field_values
+            Field values including data and coordinates
 
         Returns
         -------
-            xr.DataArray: The converted xarray DataArray
+        The converted xarray DataArray
 
         Raises
         ------
-            ValidationError: If required fields are missing or invalid
+        ValidationError
+            If required fields are missing or invalid
         """
         instance = cls(**field_values)
         return instance.to_xarray()
@@ -415,13 +437,29 @@ class Dataset(XrBase):
 
     Examples
     --------
+        >>> from xrdantic import Dataset, DataArray, Attr, Dim, Data
+        >>> import numpy as np
+        >>> Time = Dim("time")
+        >>> Y = Dim("y")
+        >>> X = Dim("x")
+        >>> class Temperature(DataArray):
+        ...     data: Data[(Time, Y, X), float]
+        ...     time: TimeCoord
+        ...     y: YCoord
+        ...     x: XCoord
+        ...     units: Attr[str] = "celsius"
+        >>> class Pressure(DataArray):
+        ...     data: Data[(Time, Y, X), float]
+        ...     time: TimeCoord
+        ...     y: YCoord
+        ...     x: XCoord
+        ...     units: Attr[str] = "pascal"
         >>> class WeatherData(Dataset):
         ...     temperature: Temperature
         ...     pressure: Pressure
         ...     x: XCoord
         ...     y: YCoord
         ...     station_name: Attr[str] = "Station Alpha"
-
         >>> weather = WeatherData(temperature=temp_array, pressure=pressure_array, x=x_coord, y=y_coord)
         >>> xr_weather = weather.to_xarray()
 

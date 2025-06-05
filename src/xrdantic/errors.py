@@ -48,8 +48,8 @@ class XrdanticError(ValueError):
             Name of the field that caused the error
         context, optional
             Additional context information for debugging
-        log_error, default True
-            Whether to log the error for debugging
+        log_error
+            Whether to log the error for debugging. Defaults to True.
         """
         self.field_name = field_name
         self.context = context or {}
@@ -238,7 +238,23 @@ class FactoryError(XrdanticError):
 def data_field_count_error(
     model_type: str, expected_count: int, actual_count: int, field_names: list[str]
 ) -> DataFieldError:
-    """Create an error for incorrect number of data fields."""
+    """Create an error for incorrect number of data fields.
+
+    Parameters
+    ----------
+    model_type
+        The type of model that has the incorrect number of data fields.
+    expected_count
+        The expected number of data fields.
+    actual_count
+        The actual number of data fields.
+    field_names
+        The names of the data fields.
+
+    Returns
+    -------
+    The error object with the appropriate message and context.
+    """
     if expected_count == 1 and actual_count != 1:
         message = (
             f"{model_type} must have exactly one data field, "

@@ -5,6 +5,7 @@ from typing import Any
 
 import numpy as np
 import pytest  # For pytest.raises and pytest.warns used in ModelTester and ValidationTester
+from numpydantic import NDArray
 from pydantic import ValidationError
 
 from xrdantic.config import ValidationContext  # Used in ValidationTester
@@ -75,22 +76,22 @@ class DataGenerator:
     rng = np.random.default_rng(42)
 
     @staticmethod
-    def random_array(size: tuple[int, ...], dtype: type = np.float64) -> np.ndarray:
+    def random_array(size: tuple[int, ...], dtype: type = np.float64) -> NDArray:
         """Generate a random array with the specified shape and dtype."""
         return DataGenerator.rng.random(size).astype(dtype)
 
     @staticmethod
-    def sequential_array(size: int, start: int = 0, dtype: type = np.float64) -> np.ndarray:
+    def sequential_array(size: int, start: int = 0, dtype: type = np.float64) -> NDArray:
         """Generate a sequential array."""
         return np.arange(start, start + size, dtype=dtype)
 
     @staticmethod
-    def constant_array(size: tuple[int, ...], value: Any, dtype: type = np.float64) -> np.ndarray:
+    def constant_array(size: tuple[int, ...], value: Any, dtype: type = np.float64) -> NDArray:
         """Generate an array filled with a constant value."""
         return np.full(size, value, dtype=dtype)
 
     @staticmethod
-    def array_with_nans(shape: tuple[int, ...], nan_fraction: float = 0.1) -> np.ndarray:
+    def array_with_nans(shape: tuple[int, ...], nan_fraction: float = 0.1) -> NDArray:
         """Generate an array with some NaN values."""
         arr = DataGenerator.rng.random(shape)
         n_nans = int(np.prod(shape) * nan_fraction)
@@ -100,7 +101,7 @@ class DataGenerator:
         return flat_arr.reshape(shape)
 
     @staticmethod
-    def array_with_infs(shape: tuple[int, ...], inf_fraction: float = 0.1) -> np.ndarray:
+    def array_with_infs(shape: tuple[int, ...], inf_fraction: float = 0.1) -> NDArray:
         """Generate an array with some infinite values."""
         arr = DataGenerator.rng.random(shape)
         n_infs = int(np.prod(shape) * inf_fraction)
