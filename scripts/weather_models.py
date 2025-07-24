@@ -268,7 +268,7 @@ def create_sample_temperature_data(nt: int = 10, nlat: int = 5, nlon: int = 8) -
     lon_coord = LongitudeCoord(data=np.linspace(-90, 90, nlon), name="longitude")
 
     # Create realistic temperature data (in Kelvin)
-    temp_data = 273.15 + 20 + 10 * rng.standard_normal(nt, nlat, nlon)
+    temp_data = 273.15 + 20 + 10 * rng.normal(0, 1, (nt, nlat, nlon))
 
     return Temperature(data=temp_data, time=time_coord, lat=lat_coord, lon=lon_coord)
 
@@ -283,7 +283,7 @@ def create_sample_weather_dataset(nt: int = 10, nlat: int = 5, nlon: int = 8) ->
     lon_coord = LongitudeCoord(data=np.linspace(-90, 90, nlon), name="longitude")
 
     # Create temperature data
-    temp_data = 273.15 + 20 + 10 * rng.standard_normal(nt, nlat, nlon)
+    temp_data = 273.15 + 20 + 10 * rng.normal(0, 1, (nt, nlat, nlon))
     temperature = Temperature(data=temp_data, time=time_coord, lat=lat_coord, lon=lon_coord)
 
     # Create precipitation data
@@ -327,3 +327,4 @@ if __name__ == "__main__":
     # Convert to xarray for inspection
     xr_weather = weather_ds.to_xarray()
     print(f"Converted to xarray Dataset with variables: {list(xr_weather.data_vars)}")
+    print(xr_weather)
