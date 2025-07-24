@@ -8,6 +8,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [Unreleased]
 
 ### <!-- 5 --> 🌀 Miscellaneous
+- 🎨 Example fix by @srivarra
+- Update changelog by @github-actions[bot]
 - 🧐 Added a slop example by @srivarra
 - Update changelog by @github-actions[bot]
 - 🎨 Update 2 by @srivarra
