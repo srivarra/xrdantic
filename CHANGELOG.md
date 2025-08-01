@@ -7,23 +7,15 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
-### <!-- 5 --> 🌀 Miscellaneous
-- 🎨 Example fix by @srivarra
-- Update changelog by @github-actions[bot]
-- 🧐 Added a slop example by @srivarra
-- Update changelog by @github-actions[bot]
-- 🎨 Update 2 by @srivarra
-- Update changelog by @github-actions[bot]
-- Merge pull request #2 from srivarra/the-rest-of-it by @srivarra
-- 💚 Codecov? by @srivarra
-- ✅ Add more tests by @srivarra
+### Docs
 - Update changelog by @github-actions[bot]
 - Update changelog by @github-actions[bot]
-- 📝 Trying svg for README banner by @srivarra
 - Update changelog by @github-actions[bot]
-- 🎉 Begin by @srivarra
-- Initialize project from cookiecutter-scverse by @srivarra
+- Update changelog by @github-actions[bot]
+- Update changelog by @github-actions[bot]
+- Update changelog by @github-actions[bot]
+- Update changelog by @github-actions[bot]
 
 ## New Contributors
-* @srivarra made their first contribution
 * @github-actions[bot] made their first contribution
+* @srivarra made their first contribution
