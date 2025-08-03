@@ -5,11 +5,8 @@ import pytest
 from xrdantic.config import (
     ValidationContext,
     XrdanticSettings,
-    enable_debug_mode,
-    enable_performance_mode,
-    enable_strict_mode,
     get_settings,
-    reset_to_default_settings,
+    reset_settings,
     update_settings,
 )
 
@@ -19,7 +16,7 @@ def managed_xrdantic_settings():
     """Fixture to provide xrdantic settings and ensure they are reset after the test."""
     settings = get_settings()
     yield settings
-    reset_to_default_settings()
+    reset_settings()
 
 
 class TestXrdanticSettings:
@@ -29,38 +26,19 @@ class TestXrdanticSettings:
         """Test default settings values."""
         settings = XrdanticSettings()
         assert settings.strict_validation is False
-        assert settings.validate_coordinates is True
-        assert settings.validate_dimensions is True
-        assert settings.use_validation_cache is True
-        assert settings.max_cache_size == 128
         assert settings.allow_nan_values is True
         assert settings.allow_inf_values is False
-        assert settings.auto_convert_lists is True
-        assert settings.log_validation_errors is True
-        assert settings.detailed_error_messages is True
-        assert settings.enable_memory_optimization is False
         assert settings.debug_mode is False
-
-    def test_settings_validation(self):
-        """Test settings validation."""
-        settings = XrdanticSettings(max_cache_size=256)
-        assert settings.max_cache_size == 256
-
-        with pytest.raises(ValueError):
-            XrdanticSettings(max_cache_size=-1)
 
     def test_settings_assignment_validation(self):
         """Test validate_assignment config."""
         settings = XrdanticSettings()
-        settings.max_cache_size = 512
-        assert settings.max_cache_size == 512
-
-        with pytest.raises(ValueError):
-            settings.max_cache_size = -5
+        settings.strict_validation = True
+        assert settings.strict_validation is True
 
     def test_extra_fields_ignored(self):
         """Test that extra fields are ignored."""
-        settings = XrdanticSettings(unknown_field=True)  # type: ignore
+        settings = XrdanticSettings(**{"unknown_field": True})  # type: ignore
         assert not hasattr(settings, "unknown_field")
 
 
@@ -84,32 +62,6 @@ class TestSettingsFunctions:
 
         with pytest.raises(ValueError, match=r"Invalid setting: 'non_existent_field'\. Valid settings are: .*"):
             update_settings(non_existent_field=True)
-
-    def test_enable_strict_mode(self, managed_xrdantic_settings):
-        """Test enable_strict_mode convenience function."""
-        enable_strict_mode()
-
-        settings = get_settings()
-        assert settings.strict_validation is True
-        assert settings.detailed_error_messages is True
-
-    def test_enable_performance_mode(self, managed_xrdantic_settings):
-        """Test enable_performance_mode convenience function."""
-        enable_performance_mode()
-
-        settings = get_settings()
-        assert settings.use_validation_cache is True
-        assert settings.enable_memory_optimization is True
-        assert settings.log_validation_errors is False
-
-    def test_enable_debug_mode(self, managed_xrdantic_settings):
-        """Test enable_debug_mode convenience function."""
-        enable_debug_mode()
-
-        settings = get_settings()
-        assert settings.debug_mode is True
-        assert settings.log_validation_errors is True
-        assert settings.detailed_error_messages is True
 
 
 class TestValidationContext:
@@ -165,7 +117,7 @@ class TestValidationContext:
         assert restored_settings is managed_xrdantic_settings
 
     def test_validation_context_nested(self, managed_xrdantic_settings):
-        """Test nested ValidationContext, why anyone would do this is beyond me, but it should still work."""
+        """Test nested ValidationContext."""
         original_strict = managed_xrdantic_settings.strict_validation
         original_debug = managed_xrdantic_settings.debug_mode
 

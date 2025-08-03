@@ -84,12 +84,12 @@ jobs:
         run: uvx hatch run ${{ matrix.env.name }}:run-cov
       - name: Generate coverage report
         run: uvx hatch run ${{ matrix.env.name }}:coverage xml
-      - name: Upload coverage
+      - name: Upload coverage reports to Codecov
         uses: codecov/codecov-action@v5
         env:
           CODECOV_TOKEN: ${{ secrets.CODECOV_TOKEN }}
         with:
-          use_oidc: true
+          slug: srivarra/xrdantic
 
   # Check that all tests defined above pass. This makes it easy to set a single "required" test in branch
   # protection instead of having to update it frequently. See https://github.com/re-actors/alls-green#why.

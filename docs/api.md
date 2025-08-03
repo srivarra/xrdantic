@@ -37,8 +37,7 @@
 
     XrdanticSettings
     ValidationContext
-    enable_debug_mode
-    enable_performance_mode
-    enable_strict_mode
     get_settings
+    update_settings
+    reset_settings
 ```

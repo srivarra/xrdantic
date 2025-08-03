@@ -27,8 +27,8 @@ dependencies = [
   "more-itertools>=10.7",
   "natsort>=8.4",
   "numpydantic>=1.6.9",
-  "pydantic>=2.11.5",
-  "pydantic-settings>=2.9.1",
+  "pydantic>=2.11.7",
+  "pydantic-settings>=2.10.1",
   "session-info2",
   "xarray",
 ]
