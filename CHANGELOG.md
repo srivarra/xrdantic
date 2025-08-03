@@ -8,7 +8,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [Unreleased]
 
 ### Docs
-- Update changelog
+- Update changelog by @github-actions[bot]
 - Update changelog by @github-actions[bot]
 - Update changelog by @github-actions[bot]
 - Update changelog by @github-actions[bot]
@@ -19,5 +19,5 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Update changelog by @github-actions[bot]
 
 ## New Contributors
+* @srivarra made their first contribution in [#4](https://github.com/srivarra/xrdantic/pull/4)
 * @github-actions[bot] made their first contribution
-* @srivarra made their first contribution
