@@ -17,7 +17,7 @@
 [badge-build]: https://github.com/srivarra/xrdantic/actions/workflows/build.yaml/badge.svg
 [badge-test]: https://github.com/srivarra/xrdantic/actions/workflows/test.yaml/badge.svg
 [badge-docs]: https://img.shields.io/readthedocs/xrdantic?logo=readthedocs
-[badge-codecov]: https://codecov.io/gh/srivarra/xrdantic/graph/badge.svg?token=ST0ST1BTWU
+[badge-codecov]: https://codecov.io/gh/srivarra/xrdantic/graph/badge.svg?token=LLUPQHDCK3
 [badge-ruff]: https://img.shields.io/endpoint?url=https://raw.githubusercontent.com/astral-sh/ruff/main/assets/badge/v2.json
 [badge-uv]: https://img.shields.io/endpoint?url=https://raw.githubusercontent.com/astral-sh/uv/main/assets/badge/v0.json
 [badge-license]: https://img.shields.io/badge/License-MIT-yellow.svg
