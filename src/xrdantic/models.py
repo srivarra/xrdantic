@@ -4,7 +4,7 @@ from functools import cached_property
 from typing import Any, Self
 
 import xarray as xr
-from pydantic import BaseModel, field_validator, model_validator
+from pydantic import BaseModel, ConfigDict, field_validator, model_validator
 from pydantic.fields import FieldInfo
 
 from xrdantic.utils import (
@@ -39,17 +39,19 @@ class XrBase(BaseModel):
     data structures using Pydantic models.
     """
 
-    model_config = {
-        "validate_assignment": True,  # Validate on field assignment
-        "validate_default": True,  # Validate default values
-        "extra": "forbid",  # Prevent extra fields
-        "frozen": False,  # Allow mutability for scientific data
-        "arbitrary_types_allowed": True,  # For numpy arrays
-        "use_enum_values": True,  # Use enum values for better performance
-        "str_strip_whitespace": True,  # Strip whitespace from strings
-        "json_schema_serialization_defaults_required": True,  # Optimize JSON schema
-        "defer_build": True,  # Defer model rebuilding for better performance
-    }
+    model_config: ConfigDict = ConfigDict(
+        {
+            "validate_assignment": True,  # Validate on field assignment
+            "validate_default": True,  # Validate default values
+            "extra": "forbid",  # Prevent extra fields
+            "frozen": False,  # Allow mutability for scientific data
+            "arbitrary_types_allowed": True,  # For numpy arrays
+            "use_enum_values": True,  # Use enum values for better performance
+            "str_strip_whitespace": True,  # Strip whitespace from strings
+            "json_schema_serialization_defaults_required": True,  # Optimize JSON schema
+            "defer_build": True,  # Defer model rebuilding for better performance
+        }
+    )
 
     @cached_property
     def _field_cache(self) -> dict[str, dict[str, FieldInfo]]:

@@ -4,10 +4,9 @@ from importlib.metadata import version
 from .config import (
     ValidationContext,
     XrdanticSettings,
-    enable_debug_mode,
-    enable_performance_mode,
-    enable_strict_mode,
     get_settings,
+    reset_settings,
+    update_settings,
 )
 from .models import Coordinate, DataArray, Dataset, DataTree
 from .types import Dim
@@ -26,10 +25,9 @@ __all__ = [
     "Name",
     # Configuration and settings
     "ValidationContext",
-    "enable_debug_mode",
-    "enable_performance_mode",
-    "enable_strict_mode",
     "get_settings",
+    "reset_settings",
+    "update_settings",
     "XrdanticSettings",
 ]
 
